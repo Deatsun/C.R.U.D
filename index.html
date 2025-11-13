@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C.R.U.D</title>
+</head>
+<body>
+    <h1>C.R.U.D</h1>
+    <hr>
+
+    <form>
+        <label for="nev">Nev</label><br>
+        <input type="text" name="nev" id="nev"><br><br>
+
+        <label for="kor">Korod</label><br>
+        <input type="number" name="kor" id="kor"><br><br>
+
+        <label for="szakma">szakma</label><br>
+        <input type="text" name="szakma" id="szakma"><br><br>
+
+        <label for="ber">Berigenye</label><br>
+        <input type="number" name="ber" id="ber"><br><br>
+
+        <button type="button" id="kuldes">Kuldes</button>
+    </form><br><br>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nev</th>
+                <th>Kor</th>
+                <th>Szakma</th>
+                <th>Berigeny</th>
+            </tr>
+        </thead>
+        <tbody id="torzs"></tbody>
+    </table><br><br>
+
+    <script src="script.js"></script>
+</body>
+</html>
