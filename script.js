@@ -1,42 +1,48 @@
-let emberek = [];
+// --- Tömb
+let emberek = []; 
 
+// --- DOM CACHING
 
-let kuldes = document.getElementById("kuldes").addEventListener("click", function(){
+const nevInput = document.getElementById("nev");
+const korInput = document.getElementById("kor");
+const szakmaInput = document.getElementById("szakma");
+const berInput = document.getElementById("ber");
 
-    let name = document.getElementById("nev").value;
-let kor = Number(document.getElementById("kor").value);
-let szakma = document.getElementById("szakma").value;
-let ber = Number(document.getElementById("ber").value);
+// --- Függvények
 
-const ujember = {
-    id:Date.now(),
-    nev:name,
-    age:kor,
-    job:szakma,
-    sallary:ber
-};
+function urites() {
+    nevInput.value = "";
+    korInput.value = "";
+    szakmaInput.value = "";
+    berInput.value = "";
 
-emberek.push(ujember);
-kirajzol();
-urites();
-});
+    nevInput.classList.remove("error");
+    korInput.classList.remove("error");
+    szakmaInput.classList.remove("error");
+    berInput.classList.remove("error");
 
-function kirajzol(){
+    nevInput.placeholder = "";
+    korInput.placeholder = "";
+    szakmaInput.placeholder = "";
+    berInput.placeholder = "";
+}
+
+function kiir(){
     const torzs = document.getElementById("torzs");
     torzs.innerHTML = "";
 
     emberek.forEach(function(ember){
         const tr = document.createElement("tr");
 
-        let td1 = document.createElement("td");
-        let td2 = document.createElement("td");
-        let td3 = document.createElement("td");
-        let td4 = document.createElement("td");
+        const td1 = document.createElement("td");
+        const td2 = document.createElement("td");
+        const td3 = document.createElement("td");
+        const td4 = document.createElement("td");
 
-        td1.appendChild(document.createTextNode(ember.nev));
-        td2.appendChild(document.createTextNode(ember.age));
-        td3.appendChild(document.createTextNode(ember.job));
-        td4.appendChild(document.createTextNode(ember.sallary));
+        td1.textContent = ember.nev;
+        td2.textContent = ember.kor;
+        td3.textContent = ember.szakma;
+        td4.textContent = ember.ber;
 
         tr.appendChild(td1);
         tr.appendChild(td2);
@@ -45,11 +51,49 @@ function kirajzol(){
 
         torzs.appendChild(tr);
     })
-};
+}
 
-function urites(){
-    document.getElementById("nev").value = "";
-    document.getElementById("kor").value = "";
-    document.getElementById("szakma").value = "";
-    document.getElementById("ber").value = "";
-};
+function hiba(input, message){
+    input.value = "";
+    input.classList.add("error");
+    input.placeholder = message;
+}
+ // --- click
+document.getElementById("kuldes").addEventListener("click", function(){
+    const nev = nevInput.value.trim();
+    const kor = Number(korInput.value);
+    const szakma = szakmaInput.value.trim();
+    const ber = Number(berInput.value);
+
+    if(!nev){
+        hiba(nevInput, "Add meg a nevet!");
+        return;
+    }
+
+    if(isNaN(kor) || kor < 18 || kor > 70){
+        hiba(korInput, "18-70 közötti kort adj meg!");
+        return;
+    }
+
+    if(!szakma){
+        hiba(szakmaInput, "Kérlek add meg a szakmádat!");
+        return;
+    }
+
+    if(isNaN(ber) || ber < 100000 || ber > 3000000){
+        hiba(berInput, "Kérlek 100.000ft és 3.000.000ft összeget adj meg!");
+        return;
+    }
+
+    const ujEmber = {
+        id: Date.now(),
+        nev: nev,
+        kor: kor,
+        szakma: szakma,
+        ber: ber
+    }
+    emberek.push(ujEmber);
+    kiir()
+    urites();
+
+});
