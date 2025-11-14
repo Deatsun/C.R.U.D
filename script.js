@@ -1,16 +1,23 @@
-// --- Tömb
-let emberek = []; 
+// --- Tomb letrehozasa
+const emberek = [];
 
-// --- DOM CACHING
-
+// --- DOM cache
 const nevInput = document.getElementById("nev");
 const korInput = document.getElementById("kor");
 const szakmaInput = document.getElementById("szakma");
 const berInput = document.getElementById("ber");
 
-// --- Függvények
+// ------ Fuggvenyek ------
 
-function urites() {
+// Hibás adat 
+function hiba(input, message){
+    input.value = "";
+    input.classList.add("error");
+    input.placeholder = message;
+};
+
+// Input mezok resetelese
+function reset(){
     nevInput.value = "";
     korInput.value = "";
     szakmaInput.value = "";
@@ -25,19 +32,20 @@ function urites() {
     korInput.placeholder = "";
     szakmaInput.placeholder = "";
     berInput.placeholder = "";
-}
+};
 
+// Kiiratas
 function kiir(){
     const torzs = document.getElementById("torzs");
     torzs.innerHTML = "";
 
     emberek.forEach(function(ember){
-        const tr = document.createElement("tr");
+        let tr = document.createElement("tr");
 
-        const td1 = document.createElement("td");
-        const td2 = document.createElement("td");
-        const td3 = document.createElement("td");
-        const td4 = document.createElement("td");
+        let td1 = document.createElement("td");
+        let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
+        let td4 = document.createElement("td");
 
         td1.textContent = ember.nev;
         td2.textContent = ember.kor;
@@ -50,50 +58,44 @@ function kiir(){
         tr.appendChild(td4);
 
         torzs.appendChild(tr);
-    })
-}
+    });
+};
 
-function hiba(input, message){
-    input.value = "";
-    input.classList.add("error");
-    input.placeholder = message;
-}
- // --- click
+// --- Click ---
 document.getElementById("kuldes").addEventListener("click", function(){
-    const nev = nevInput.value.trim();
-    const kor = Number(korInput.value);
-    const szakma = szakmaInput.value.trim();
-    const ber = Number(berInput.value);
+    let _nev = nevInput.value.trim();
+    let _kor = Number(korInput.value);
+    let _szakma = szakmaInput.value.trim();
+    let _ber = Number(berInput.value);
 
-    if(!nev){
-        hiba(nevInput, "Add meg a nevet!");
+    if(!_nev){
+        hiba(nevInput,"Add meg a neved!");
         return;
     }
-
-    if(isNaN(kor) || kor < 18 || kor > 70){
-        hiba(korInput, "18-70 közötti kort adj meg!");
+    if(isNaN(_kor) || _kor < 18 || _kor > 70){
+        hiba(korInput, "min:18 - max:70");
         return;
     }
-
-    if(!szakma){
-        hiba(szakmaInput, "Kérlek add meg a szakmádat!");
+    if(!_szakma){
+        hiba(szakmaInput,"Add meg a szakmad!");
         return;
     }
-
-    if(isNaN(ber) || ber < 100000 || ber > 3000000){
-        hiba(berInput, "Kérlek 100.000ft és 3.000.000ft összeget adj meg!");
+    if(isNaN(_ber) || _ber < 100000 || _ber > 3000000){
+        hiba(berInput, "min:100k - max:3000000");
         return;
     }
-
+// -- Objektum letrehozasa
     const ujEmber = {
         id: Date.now(),
-        nev: nev,
-        kor: kor,
-        szakma: szakma,
-        ber: ber
-    }
-    emberek.push(ujEmber);
-    kiir()
-    urites();
+        nev:_nev,
+        kor:_kor,
+        szakma:_szakma,
+        ber:_ber
+    };
 
+    //Tombhoz hozzaadas
+    emberek.push(ujEmber);
+    kiir();
+    reset();
+    
 });
