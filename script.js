@@ -1,4 +1,4 @@
-// --- Tomb letrehozasa
+// Tomb az adatoknak
 const emberek = [];
 
 // --- DOM cache
@@ -9,27 +9,15 @@ const berInput = document.getElementById("ber");
 
 // ------ Fuggvenyek ------
 
-// Hibas adat
-function hiba(input, message){
+    //Hiba eseten
+function hiba(input,message){
     input.value = "";
     input.classList.add("error");
     input.placeholder = message;
 };
 
-// Torles
-function torolEmber(id){
-    const index = emberek.findIndex(function(ember){
-        return ember.id === id;
-    });
-
-    if(index !== -1){
-        emberek.splice(index,1);
-        kiir();
-    }
-};
-
-// Input mezok resetelese
-function reset(){
+    //Tablazat kiuritese
+function kiurites(){
     nevInput.value = "";
     korInput.value = "";
     szakmaInput.value = "";
@@ -46,7 +34,18 @@ function reset(){
     berInput.placeholder = "";
 };
 
-// Kiiratas
+    //Torles a tablazatbol
+function torlesEmber(id){
+    const index = emberek.findIndex(function(ember){
+        return ember.id === id;
+    });
+    if(index !== -1){
+        emberek.splice(index,1);
+        kiir();
+    };
+};
+
+    //Tablazat kiiratasa
 function kiir(){
     const torzs = document.getElementById("torzs");
     torzs.innerHTML = "";
@@ -54,18 +53,17 @@ function kiir(){
     emberek.forEach(function(ember){
         let tr = document.createElement("tr");
 
-        let td1 = document.createElement("td");
-        let td2 = document.createElement("td");
-        let td3 = document.createElement("td");
-        let td4 = document.createElement("td");
-        let td5 = document.createElement("td"); // Muvelet oszlop
+        let td1 = document.createElement("td"); //nev
+        let td2 = document.createElement("td"); //kor
+        let td3 = document.createElement("td"); //szakma
+        let td4 = document.createElement("td"); //ber
+        let td5 = document.createElement("td"); //muvelet
 
-        // Torles gomb
-        let torles = document.createElement("button");
-        torles.textContent="Torles";
+        const torles = document.createElement("button");
+        torles.textContent = "Törlés";
 
         torles.addEventListener("click", function(){
-            torolEmber(ember.id);
+            torlesEmber(ember.id);
         });
 
         td1.textContent = ember.nev;
@@ -73,9 +71,6 @@ function kiir(){
         td3.textContent = ember.szakma;
         td4.textContent = ember.ber;
         td5.appendChild(torles);
-        
-        
-
 
         tr.appendChild(td1);
         tr.appendChild(td2);
@@ -87,8 +82,9 @@ function kiir(){
     });
 };
 
-// --- Click ---
+// ---Click---
 document.getElementById("kuldes").addEventListener("click", function(){
+
     let _nev = nevInput.value.trim();
     let _kor = Number(korInput.value);
     let _szakma = szakmaInput.value.trim();
@@ -99,18 +95,18 @@ document.getElementById("kuldes").addEventListener("click", function(){
         return;
     }
     if(isNaN(_kor) || _kor < 18 || _kor > 70){
-        hiba(korInput, "min:18 - max:70");
+        hiba(korInput,"min:18 - max:70");
         return;
     }
     if(!_szakma){
-        hiba(szakmaInput,"Add meg a szakmad!");
+        hiba(szakmaInput,"Add meg a szakmád!");
         return;
     }
     if(isNaN(_ber) || _ber < 100000 || _ber > 3000000){
-        hiba(berInput, "min:100k - max:3000000");
+        hiba(berInput,"min:100k - max:3m");
         return;
     }
-// -- Objektum letrehozasa
+
     const ujEmber = {
         id: Date.now(),
         nev:_nev,
@@ -119,9 +115,7 @@ document.getElementById("kuldes").addEventListener("click", function(){
         ber:_ber
     };
 
-    //Tombhoz hozzaadas
     emberek.push(ujEmber);
     kiir();
-    reset();
-    
+    kiurites();
 });
