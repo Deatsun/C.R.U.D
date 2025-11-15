@@ -9,11 +9,23 @@ const berInput = document.getElementById("ber");
 
 // ------ Fuggvenyek ------
 
-// Hibás adat 
+// Hibas adat
 function hiba(input, message){
     input.value = "";
     input.classList.add("error");
     input.placeholder = message;
+};
+
+// Torles
+function torolEmber(id){
+    const index = emberek.findIndex(function(ember){
+        return ember.id === id;
+    });
+
+    if(index !== -1){
+        emberek.splice(index,1);
+        kiir();
+    }
 };
 
 // Input mezok resetelese
@@ -46,16 +58,30 @@ function kiir(){
         let td2 = document.createElement("td");
         let td3 = document.createElement("td");
         let td4 = document.createElement("td");
+        let td5 = document.createElement("td"); // Muvelet oszlop
+
+        // Torles gomb
+        let torles = document.createElement("button");
+        torles.textContent="Torles";
+
+        torles.addEventListener("click", function(){
+            torolEmber(ember.id);
+        });
 
         td1.textContent = ember.nev;
         td2.textContent = ember.kor;
         td3.textContent = ember.szakma;
         td4.textContent = ember.ber;
+        td5.appendChild(torles);
+        
+        
+
 
         tr.appendChild(td1);
         tr.appendChild(td2);
         tr.appendChild(td3);
         tr.appendChild(td4);
+        tr.appendChild(td5);
 
         torzs.appendChild(tr);
     });
