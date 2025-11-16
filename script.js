@@ -1,22 +1,23 @@
-// Tomb az adatoknak.
+//1. Lepes, tomb letrehozasa, amibe a kinyert adatokat taroljuk.
 const emberek = [];
 
-// DOM cache
+// 2. lepes, DOM cache, a konnyebb letisztultabb adatok kezelesehez.
 const nevInput = document.getElementById("nev");
 const korInput = document.getElementById("kor");
 const szakmaInput = document.getElementById("szakma");
 const berInput = document.getElementById("ber");
 
-// ---- Fuggvenyek ----
+//3. lepes Fuggvenyek letrehozasa.
 
-    //Hibas adat
-function hiba(input, message){
+    //Hibas adat eseten:
+function hiba(input,message){
     input.value = "";
-    input.classList.add("error");
-    input.placeholder = message;
+    input.classList.add("error"); //hozza adjuk az "error" claast, majd css-ben dolgozunk rajta.
+    input.placeholder = message; //ide irjuk ki a hibat
 };
-    //Adatok kiuritese az inputbol
-function urit(){
+
+    //Az inputmezok kiuritese
+function kiurit(){
     nevInput.value = "";
     korInput.value = "";
     szakmaInput.value = "";
@@ -25,14 +26,15 @@ function urit(){
     nevInput.classList.remove("error");
     korInput.classList.remove("error");
     szakmaInput.classList.remove("error");
-    berInput.classList.remove("error");
+    berInput.classList.remove("error"); //eltavolitjuk az error classt, ha esetleg hozza kellett volna adni.
 
     nevInput.placeholder = "";
-    korInput.placeholder = "";
+    korInput.placeholder ="";
     szakmaInput.placeholder = "";
     berInput.placeholder = "";
 };
-    // Ember torlese a listabol
+
+    //Egy ember torlese a tablazatbol (tombbol), id alapjan.
 function torolEmber(id){
     const index = emberek.findIndex(function(ember){
         return ember.id === id;
@@ -42,32 +44,33 @@ function torolEmber(id){
         kiir();
     };
 };
-    // adatok kiiratasa tablazatba
+
+    //Az adatok vegigjarasa es kiiratasa tablazatba.
 function kiir(){
     const torzs = document.getElementById("torzs");
-    torzs.innerHTML = "";
+    torzs.innerHTML = ""; //kiuritjuk, hogy ne duplikalodjon a kovetkezo kiirataskor.
 
     emberek.forEach(function(ember){
         let tr = document.createElement("tr");
 
-        let td1 = document.createElement("td");//nev
-        let td2 = document.createElement("td");//kor
-        let td3 = document.createElement("td");//szakma
-        let td4 = document.createElement("td");//ber
-        let td5 = document.createElement("td");//muvelet
+        let td1 = document.createElement("td");
+        let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
+        let td4 = document.createElement("td");
+        let td5 = document.createElement("td");
 
-        let torles = document.createElement("button");
-        torles.textContent = "Törles";
+        const torol = document.createElement("button");
+        torol.textContent = "Torles";
 
-        torles.addEventListener("click", function(){
+        torol.addEventListener("click", function(){
             torolEmber(ember.id);
         });
 
-        td5.appendChild(torles);
-        td1.textContent=ember.nev;
+        td1.textContent = ember.nev;
         td2.textContent = ember.kor;
         td3.textContent = ember.szakma;
         td4.textContent = ember.ber;
+        td5.appendChild(torol);
 
         tr.appendChild(td1);
         tr.appendChild(td2);
@@ -79,40 +82,39 @@ function kiir(){
     });
 };
 
-// --- Click ---
+// kuldes gomb kattintasa
 document.getElementById("kuldes").addEventListener("click", function(){
-    let _nev = nevInput.value.trim();
-    let _kor = Number(korInput.value);
-    let _szakma = szakmaInput.value.trim();
-    let _ber = Number(berInput.value);
+    let nevVal = nevInput.value.trim();
+    let korVal = Number(korInput.value);
+    let szakmaVal = szakmaInput.value.trim();
+    let berVal = Number(berInput.value);
 
-    if(!_nev){
+    if(!nevVal){
         hiba(nevInput,"Add meg a neved!");
         return;
     };
-    if(isNaN(_kor) ||_kor < 18 || _kor > 70){
+    if(isNaN(korVal) || korVal < 18 || korVal > 70){
         hiba(korInput,"min:18 - max:70");
         return;
     };
-    if(!_szakma){
+    if(!szakmaVal){
         hiba(szakmaInput,"Add meg a szakmad!");
         return;
     };
-    if(isNaN(_ber) || _ber < 100000 || _ber > 3000000){
+    if(isNaN(berVal) || berVal < 100000 || berVal > 3000000){
         hiba(berInput,"min:100k - max:3m");
         return;
     };
 
-
     const ujEmber = {
         id: Date.now(),
-        nev:_nev,
-        kor:_kor,
-        szakma:_szakma,
-        ber:_ber
+        nev:nevVal,
+        kor:korVal,
+        szakma:szakmaVal,
+        ber:berVal
     };
 
     emberek.push(ujEmber);
     kiir();
-    urit();
+    kiurit();
 });
