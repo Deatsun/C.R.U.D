@@ -1,8 +1,10 @@
-// -- Tomb letrehozasa
+// Tomb letrehozasa
 const emberek = [];
-let szerkeszt = false;
 
-// --- DOM cache
+// szerkesztes mod
+let szerkesztID = false;
+
+// DOM cache
 const nevInput = document.getElementById("nev");
 const korInput = document.getElementById("kor");
 const szakmaInput = document.getElementById("szakma");
@@ -10,24 +12,69 @@ const berInput = document.getElementById("ber");
 
 // --- Fuggvenyek ---
 
-    //Hibas adat
+// Hibara reagalo
 function hibaEmber(input,message){
     input.value = "";
     input.classList.add("error");
     input.placeholder = message;
 }
-    //Torles
+
+// Ember torlese a tombbol
 function torolEmber(id){
     const index = emberek.findIndex(function(ember){
-        return ember.id === id;
+        return ember.id === -1;
     });
-    if(index !== -1){
+    if(index !== id){
         emberek.splice(index,1);
-        kiir();
     };
+    kiir();
 }
 
-    //input mezok kiuritese
+// Adatok kiiratasa a tablazatba
+function kiir(){
+    const torzs = document.getElementById("torzs");
+    torzs.innerHTML = "";
+
+    emberek.forEach(function(ember){
+        const tr = document.createElement("tr");
+
+        const td1 = document.createElement("td")
+        const td2 = document.createElement("td")
+        const td3 = document.createElement("td")
+        const td4 = document.createElement("td")
+        const td5 = document.createElement("td")
+
+        td1.textContent = ember.nev;
+        td2.textContent = ember.kor;
+        td3.textContent = ember.szakma;
+        td4.textContent = ember.ber;
+
+        // torles gomb
+        const torles = document.createElement("button");
+        torles.textContent = "Törlés";
+
+        torles.addEventListener("click", function(){
+            torolEmber(ember.id);
+        });
+
+        // szerkesztes gomb
+        const szerkeszt = document.createElement("button");
+        szerkeszt.textContent = "Szerkesztes";
+
+
+        td5.appendChild(torles);
+
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        tr.appendChild(td4);
+        tr.appendChild(td5);
+
+        torzs.appendChild(tr);
+    });
+}
+
+// input mezok kiuritese
 function kiurit(){
     nevInput.value = "";
     korInput.value = "";
@@ -45,61 +92,7 @@ function kiurit(){
     berInput.placeholder = "";
 }
 
-    //Kiiratas tablazatba
-function kiir(){
-    const torzs = document.getElementById("torzs");
-    torzs.innerHTML = "";
-
-    emberek.forEach(function(ember){
-        const tr = document.createElement("tr");
-
-        const td1 = document.createElement("td");
-        const td2 = document.createElement("td");
-        const td3 = document.createElement("td");
-        const td4 = document.createElement("td");
-        const td5 = document.createElement("td"); // muvelet oszlop
-
-        td1.textContent = ember.nev;
-        td2.textContent = ember.kor;
-        td3.textContent = ember.szakma;
-        td4.textContent = ember.ber;
-
-        //torles gomb letrehozasa
-    const torles = document.createElement("button");
-    torles.textContent = "Törlés";
-
-    torles.addEventListener("click", function(){
-        torolEmber(ember.id);
-    });
-        td5.appendChild(torles);
-
-        //Szerkesztes gomb letrehozasa
-    const szerkesztes = document.createElement("button");
-    szerkesztes.textContent = "Szerkesztes";
-
-    szerkesztes.addEventListener("click", function(){
-        nevInput.value = ember.nev;
-        korInput.value = ember.kor;
-        szakmaInput.value = ember.szakma;
-        berInput.value = ember.ber;
-
-        szerkeszt = ember.id;
-
-    })
-    td5.appendChild(szerkesztes);
-
-
-    tr.appendChild(td1);
-    tr.appendChild(td2);
-    tr.appendChild(td3);
-    tr.appendChild(td4);
-    tr.appendChild(td5);
-
-    torzs.appendChild(tr);
-    });
-}
-
-// --- Click esemeny ("kuldes") ---
+// click
 document.getElementById("kuldes").addEventListener("click", function(){
     let nevVal = nevInput.value.trim();
     let korVal = Number(korInput.value);
@@ -121,25 +114,6 @@ document.getElementById("kuldes").addEventListener("click", function(){
     if(isNaN(berVal) || berVal < 100000 || berVal > 3000000){
         hibaEmber(berInput,"min:100k - max:3m");
         return;
-    };
-
-    // Ha szerkesztunk
-    if(szerkeszt !== null){
-        const index = emberek.findIndex(function(ember){
-            return ember.id === szerkeszt;
-        });
-
-         if(szerkeszt !== -1){
-            emberek[index].nev = nevVal;
-            emberek[index].kor = korVal;
-            emberek[index].szakma = szakmaVal;
-            emberek[index].ber = berVal;
-    };
-    szerkeszt = null;
-    kiir();
-    kiurit();
-    return;
-
     };
 
     const ujEmber = {
