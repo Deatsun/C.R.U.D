@@ -1,8 +1,10 @@
+const { version } = require("react");
+
 // Tomb letrehozasa
 const emberek = [];
 
 // szerkesztes mod
-let szerkesztID = false;
+let szerkesztettID = null;
 
 // DOM cache
 const nevInput = document.getElementById("nev");
@@ -10,7 +12,7 @@ const korInput = document.getElementById("kor");
 const szakmaInput = document.getElementById("szakma");
 const berInput = document.getElementById("ber");
 
-// --- Fuggvenyek ---
+// --- Fuggvenyek --------------------------------------------------------------------------
 
 // Hibara reagalo
 function hibaEmber(input,message){
@@ -19,7 +21,7 @@ function hibaEmber(input,message){
     input.placeholder = message;
 }
 
-// Ember torlese a tombbol
+// Ember torlese a tombbol ----------------------------------
 function torolEmber(id){
     const index = emberek.findIndex(function(ember){
         return ember.id === -1;
@@ -30,7 +32,7 @@ function torolEmber(id){
     kiir();
 }
 
-// Adatok kiiratasa a tablazatba
+// Adatok kiiratasa a tablazatba -------------------------------------
 function kiir(){
     const torzs = document.getElementById("torzs");
     torzs.innerHTML = "";
@@ -49,7 +51,7 @@ function kiir(){
         td3.textContent = ember.szakma;
         td4.textContent = ember.ber;
 
-        // torles gomb
+        // torles gomb 
         const torles = document.createElement("button");
         torles.textContent = "Törlés";
 
@@ -57,9 +59,18 @@ function kiir(){
             torolEmber(ember.id);
         });
 
-        // szerkesztes gomb
+        // szerkesztes gomb 
         const szerkeszt = document.createElement("button");
         szerkeszt.textContent = "Szerkesztes";
+
+        szerkeszt.addEventListener("click", function(){
+            nevInput.value = ember.nev;
+            korInput.value = ember.kor;
+            szakmaInput.value = ember.szakma;
+            berInput.value = ember.ber;
+
+            szerkesztettID = ember.id;
+        })
 
 
         td5.appendChild(torles);
@@ -74,7 +85,7 @@ function kiir(){
     });
 }
 
-// input mezok kiuritese
+// input mezok kiuritese -----------------------------------------------
 function kiurit(){
     nevInput.value = "";
     korInput.value = "";
@@ -91,6 +102,7 @@ function kiurit(){
     szakmaInput.placeholder = "";
     berInput.placeholder = "";
 }
+//--------------------------------------------fv end----------------------------------------
 
 // click
 document.getElementById("kuldes").addEventListener("click", function(){
