@@ -1,5 +1,6 @@
 //1. Lepes, tomb letrehozasa, amibe a kinyert adatokat taroljuk.
 const emberek = [];
+const editID = null; //Szerkesztes
 
 // 2. lepes, DOM cache, a konnyebb letisztultabb adatok kezelesehez.
 const nevInput = document.getElementById("nev");
@@ -59,11 +60,19 @@ function kiir(){
         let td4 = document.createElement("td");
         let td5 = document.createElement("td");
 
+        //Torles gomb letrehozasa
         const torol = document.createElement("button");
         torol.textContent = "Torles";
 
         torol.addEventListener("click", function(){
             torolEmber(ember.id);
+        });
+        //Szerkesztes gomb letrehozasa
+        const szerkesztes = document.createElement("button");
+        szerkesztes.textContent = "Szerkesztés";
+
+        szerkesztes.addEventListener("click", function(){
+            console.log(ember.id);
         });
 
         td1.textContent = ember.nev;
@@ -71,6 +80,7 @@ function kiir(){
         td3.textContent = ember.szakma;
         td4.textContent = ember.ber;
         td5.appendChild(torol);
+        td5.appendChild(szerkesztes);
 
         tr.appendChild(td1);
         tr.appendChild(td2);
