@@ -1,68 +1,63 @@
-//1. lepeskent letrehozom a tombot, amibe az objektumokat fogom tarolni
+// tomb letrehozasa az obejktumoknak.
 const emberek = [];
 
-//letrehozom azt a valtozot, ami kesobb eldontni, hogy szerkeszteni kell, vagy uj embert letrehozni
-let szerkesztID = null; //let-el hozom létre, mert később változhat.
+// valtozo letrehozasa, a szerkeszteshez
+let szerkesztID = null;
 
-
-
-// DOM cache, a könnyebb-rugalmasabb adatkezeles vegett
+// DOM cache a konnyebb adatkezeles erdekeben
 const nevInput = document.getElementById("nev");
 const korInput = document.getElementById("kor");
 const szakmaInput = document.getElementById("szakma");
 const berInput = document.getElementById("ber");
 
-// Most kovetkezik a fuggvenyek letrehozasa
+// --- fuggvenyek letrehozasa ---
 
-//KIURITES - ezzel a fuggvennyel uritjuk ki az input mezobol az adatokat.
+// input mezok uritese
 function kiurit(){
     nevInput.value = "";
     korInput.value = "";
     szakmaInput.value = "";
     berInput.value = "";
 
-    nevInput.classList.remove("error") //csak abban az esetben szukseges, ha van letrehozva valami class, pl hiba esten, amit hozza adunk
+    nevInput.classList.remove("error");
     korInput.classList.remove("error");
     szakmaInput.classList.remove("error");
     berInput.classList.remove("error");
 
-    nevInput.placeholder = ""; // mivel egy hiba eseten a placeholderbe irunk a felhasznalonak, ezt is uriteni kell!
+    nevInput.placeholder = "";
     korInput.placeholder = "";
     szakmaInput.placeholder = "";
     berInput.placeholder = "";
 
-    szerkesztID = null; // hogy "kilepjen a szerkesztesbol"
-}
+    szerkesztID = null;
+};
 
-
-//HIBA - ha a felhasznalo hibasan, vagy uresen toltotte ki az inputokat, ezzel jelezzuk fele
+// hibas adat eseten
 function hibaEmber(input,message){
-
     input.value = "";
     input.classList.add("error");
-    input.placeholder = message; // az uzenet a placeholderben jelenik meg.
-}
+    input.placeholder = message;
+};
 
-//TORLES - ha a felhasznalo torolni szeretne egy objektumot a tombbol
+// egy objektum torlese 
 function torolEmber(id){
     const index = emberek.findIndex(function(ember){
-        return ember.id === id; //kinyerjuk az adott embernek az indexet a tombbol
+        return ember.id === id;
     });
-    if(index !== -1){ //ha tenyleg van olyan index, akkor toroljuk
+    if(index !== -1){
         emberek.splice(index,1);
-        kiir(); //meghivjuk a kesobb letrehozott kiir fuggvenyt, hogy ismet kiirja az objektumokat a tablzatba, "frissitve"
+        kiir();
     };
-}
+};
 
-//SZERKESZTES - ha a felhasznalo szerkeszteni szertne a mar eltarolt objektumon
+// objektum szerkesztese
 function szerkesztEmber(id){
     const kember = emberek.find(function(ember){
         return ember.id === id;
-    });
+    })
     if(!kember){
         return;
     }
-    
 
     nevInput.value = kember.nev;
     korInput.value = kember.kor;
@@ -70,52 +65,48 @@ function szerkesztEmber(id){
     berInput.value = kember.ber;
 
     szerkesztID = id;
-};
+}
 
-//KIIR - adatok kiiratasa egy tablazatba
+// objektum kiiratasa tablazatba
 function kiir(){
     const torzs = document.getElementById("torzs");
-    torzs.innerHTML = ""; // kiuritjuk minden hivaskor a tbody-t, hogy ne duplikalodjanak az objektumok.
+    torzs.innerHTML = "";
 
     emberek.forEach(function(ember){
-        const tr = document.createElement("tr"); //minden futaskor letrehozunk egy uj sort, es abba uj cellakat.
+        const tr = document.createElement("tr");
 
         const td1 = document.createElement("td");
         const td2 = document.createElement("td");
         const td3 = document.createElement("td");
         const td4 = document.createElement("td");
-        const td5 = document.createElement("td"); //muvelet cella
+        const td5 = document.createElement("td");
 
         td1.textContent = ember.nev;
         td2.textContent = ember.kor;
         td3.textContent = ember.szakma;
         td4.textContent = ember.ber;
 
+        //torles gomb
+        const torles = document.createElement("button");
+        torles.textContent = "torles";
 
-        //toroles gomb letrehozasa
-
-        const torol = document.createElement("button");
-        torol.textContent = "torol";
-
-        torol.addEventListener("click", function(){
+        torles.addEventListener("click", function(){
             torolEmber(ember.id);
         });
+        td5.appendChild(torles);
 
-        td5.appendChild(torol);
+        // szerkesztes gomb
 
-        //szerkesztes gomb letrehozasa
         const szerkesztes = document.createElement("button");
         szerkesztes.textContent = "szerkesztes";
 
         szerkesztes.addEventListener("click", function(){
             szerkesztEmber(ember.id);
-        })
+        });
         td5.appendChild(szerkesztes);
 
 
 
-
-        
         tr.appendChild(td1);
         tr.appendChild(td2);
         tr.appendChild(td3);
@@ -123,11 +114,10 @@ function kiir(){
         tr.appendChild(td5);
 
         torzs.appendChild(tr);
+    });
+};
 
-    })
-}
-
-// kuldes gomb lenyomasa
+// click
 document.getElementById("kuldes").addEventListener("click", function(){
     let nevVal = nevInput.value.trim();
     let korVal = Number(korInput.value);
@@ -138,7 +128,7 @@ document.getElementById("kuldes").addEventListener("click", function(){
         hibaEmber(nevInput,"Add meg a neved!");
         return;
     };
-    if(isNaN(korVal) || korVal < 18 || korVal > 70){
+    if(isNaN(korVal) || korVal < 18 ||korVal > 70){
         hibaEmber(korInput,"min:18 - max:70");
         return;
     };
@@ -146,8 +136,8 @@ document.getElementById("kuldes").addEventListener("click", function(){
         hibaEmber(szakmaInput,"Add meg a szakmad!");
         return;
     };
-    if(isNaN(berVal) || berVal <= 0 || berVal > 3000000){
-        hibaEmber(berInput,"min:0 - max:3000000");
+    if(isNaN(berVal) || berVal <= 0 || berVal > 1000000){
+        hibaEmber(berInput,"Nem megfelelo osszeget adtal meg!");
         return;
     };
 
@@ -159,19 +149,18 @@ document.getElementById("kuldes").addEventListener("click", function(){
             szakma:szakmaVal,
             ber:berVal
         };
-
         emberek.push(ujEmber);
     }
     else{
-       const index = emberek.findIndex(function(ember){
-        return ember.id === szerkesztID;
-       });
-       if(index !== -1){
-        emberek[index].nev = nevVal;
-        emberek[index].kor = korVal;
-        emberek[index].szakma = szakmaVal;
-        emberek[index].ber = berVal;
-       }
+        const index = emberek.findIndex(function(ember){
+            return szerkesztID === ember.id;
+        })
+                if(index !== -1){
+            emberek[index].nev = nevVal;
+            emberek[index].kor = korVal;
+            emberek[index].szakma = szakmaVal;
+            emberek[index].ber = berVal;
+        }
     }
     kiir();
     kiurit();
