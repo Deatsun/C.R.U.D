@@ -1,25 +1,25 @@
-// tomb letrehozasa
+// CRUD
+
 const emberek = [];
 
-// valtozo letrehozasa, a kesobbi szerkeszteshez.
-let szerkesztID = null;
+let szID = null;
 
-// DOM cache - az egyszerubb adathasznalathoz.
+// dom cache
 const nevInput = document.getElementById("nev");
 const korInput = document.getElementById("kor");
 const szakmaInput = document.getElementById("szakma");
 const berInput = document.getElementById("ber");
 
-// Fuggvenyek ------------------------
+// fuggvenyek
 
-//kiurites az inputmezokbol
+//input mezo uritese
 function kiurit(){
     nevInput.value = "";
     korInput.value = "";
     szakmaInput.value = "";
     berInput.value = "";
 
-    nevInput.classList.remove("error"); //le kell szedni az error class-t ha esetleg egy hibas adat miatt felkerulne
+    nevInput.classList.remove("error");
     korInput.classList.remove("error");
     szakmaInput.classList.remove("error");
     berInput.classList.remove("error");
@@ -29,45 +29,44 @@ function kiurit(){
     szakmaInput.placeholder = "";
     berInput.placeholder = "";
 
-    szerkesztID = null //vissza allitjuk a szerkesztes modot, mert nem biztos, hogy szerkeszteni akarunk legkozelebb
+    szID = null;
 };
 
-// Hibas input adat eseten.
+//Hibas adat eseten az inputban
 function hibaEmber(input,message){
     input.value = "";
-    input.classList.add("error"); // hozza adjuk az error class-t, amit css-ben mar megformaztunk
+    input.classList.add("error");
     input.placeholder = message;
 };
 
-//Ha torolni szeretnenk egy objektumot a tombbol.
+//objektum torlese a tablazatbol
 function torolEmber(id){
     const index = emberek.findIndex(function(ember){
         return ember.id === id;
     });
-    if(index !== -1){ //ha valoban van ilyen id.
+    if(index !== -1){
         emberek.splice(index,1);
-        kiir(); // meghivjuk a kiir fuggvenyt, amit kesobb hozunk letre, hogy ismet kiirja a tombot, a valtozatatasokkal.
+        kiir();
     };
 };
 
-//ha szerkszteni akarunk egy objektumot
+//objektum szerkesztese a tombben
 function szerkesztEmber(id){
     const kember = emberek.find(function(ember){
-        return ember.id === id; 
+        return ember.id === id;
     });
     if(!kember){
         return;
     }
-
-    nevInput.value = kember.nev; //kirjuk az inputba a szerkeszteni kivant objektum adatait.
+    nevInput.value = kember.nev;
     korInput.value = kember.kor;
     szakmaInput.value = kember.szakma;
     berInput.value = kember.ber;
 
-    szerkesztID = id;
+    szID = id;
 };
 
-//kiiratas tablazatba
+//objektum kiiratasa tombbe.
 function kiir(){
     const torzs = document.getElementById("torzs");
     torzs.innerHTML = "";
@@ -114,9 +113,8 @@ function kiir(){
     });
 };
 
-// click esemeny
+// click esemeny "kuldes"
 document.getElementById("kuldes").addEventListener("click", function(){
-
     let nevVal = nevInput.value.trim();
     let korVal = Number(korInput.value);
     let szakmaVal = szakmaInput.value.trim();
@@ -134,14 +132,14 @@ document.getElementById("kuldes").addEventListener("click", function(){
         hibaEmber(szakmaInput,"Add meg a szakmad!");
         return;
     };
-    if(isNaN(berVal) ||berVal <= 0 || berVal > 10000000){
+    if(isNaN(berVal) || berVal <= 0 ||berVal > 10000000){
         hibaEmber(berInput,"Helytelen osszeget adtal meg!");
         return;
     };
 
-    if(szerkesztID === null){
+    if(szID === null){
         const ujEmber = {
-            id:Date.now(),
+            id: Date.now(),
             nev:nevVal,
             kor:korVal,
             szakma:szakmaVal,
@@ -151,15 +149,15 @@ document.getElementById("kuldes").addEventListener("click", function(){
     }
     else{
         const index = emberek.findIndex(function(ember){
-           return szerkesztID === ember.id;
-        });
+            return ember.id === szID;
+        })
         if(index !== -1){
-             emberek[index].nev = nevVal;
+            emberek[index].nev = nevVal;
             emberek[index].kor = korVal;
             emberek[index].szakma = szakmaVal;
             emberek[index].ber = berVal;
-        }
+        };
     };
     kiir();
     kiurit();
-});
+})
