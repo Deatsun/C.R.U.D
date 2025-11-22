@@ -1,5 +1,5 @@
 // Tomb letrehozasa az objektumok tarolasa vegett.
-const emberek = [];
+let emberek = []; //"let" - A LocalStorage miatt.
 
 // Valtozo letrehozasa, az objektum szerkesztese vegett.(valtozhat)
 let szID = null;
@@ -10,8 +10,20 @@ const korInput = document.getElementById("kor");
 const szakmaInput = document.getElementById("szakma");
 const berInput = document.getElementById("ber");
 
+// Betoltes LocalStorage-bol indulaskor
+const mentett = localStorage.getItem("emberek");
+if(mentett){
+    emberek = JSON.parse(mentett);
+    kiir();
+};
+
 
 //------------------------ Fuggvenyek ----------------------------------------------
+    //-Mentes LocalStorage-ba.
+    function mentesLocal(){
+        localStorage.setItem("emberek",JSON.stringify(emberek));
+    }
+
     //-Inputmezok kiuritese
     function kiurit(){
         nevInput.value = "";
@@ -48,6 +60,7 @@ const berInput = document.getElementById("ber");
         });
         if(index !== -1){
             emberek.splice(index,1);
+            mentesLocal(); 
             kiir(); //A torles vegeztevel, ismet megjelenitjuk a teljes tablazatot.(kiir)
         };
     };
@@ -157,6 +170,7 @@ document.getElementById("kuldes").addEventListener("click", function(){
             ber: berVal
         };
         emberek.push(ujEmber); //Hozza adjuk a tombbhoz a kesz objektumot.
+        mentesLocal(); //Hogy elmentse a bongeszo.
     }
     else{//Ha az szID egy meglevo id-ra mutat, akkor kezdodik a szerkesztes.
         const index = emberek.findIndex(function(ember){
@@ -167,6 +181,7 @@ document.getElementById("kuldes").addEventListener("click", function(){
             emberek[index].kor = korVal;
             emberek[index].szakma = szakmaVal;
             emberek[index].ber = berVal;
+            mentesLocal();
         };
     };
     kiir();
